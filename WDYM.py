@@ -1,6 +1,8 @@
 import os
 import random
 import string
+import time 
+import openpyxl
 
 def randomString(stringLength=2):
     """Generate a random string of fixed length """
@@ -13,14 +15,35 @@ s = ['w','a','s','d','x']
 r = ['4','e','r','t','f']
 m = ['j','n','m',',']
 
+loc = ("./comandos.xlsx") 
+
+if(os.path.exists(loc)):
+    wb =openpyxl.load_workbook(loc)
+else:
+    wb = openpyxl.Workbook()
+    wb.save(loc)
+
 comandos = ['ls','rm']
+
+sheet = wb.active
+
+
+for i in range(sheet.max_row):
+    tem = sheet.cell(i+1,1).value
+    if tem:
+        comandos.append(tem)
+
+
+max = sheet.max_row
 while True:
+      
     comando = input(">>>")
     if comando == '': #evitar quiebre con enter
         pass
     elif(comando == 'file'): #crear archivos random para borrar
         os.system("type NUL > " + randomString()+".txt")
     elif(comando == "ex" or comando == "exit"):#salida
+        wb.save(loc)
         print("Adios :D")
         break
     else:
@@ -37,7 +60,9 @@ while True:
                     if(comando[1] in s):
                         res = input("Did you mean ls ? (Y/N)")
                         if(res == 'Y' or res == 'y'):
-                            comandos.append(comando[:2])                    
+                            comandos.append(comando[:2])   
+                            max = max + 1    
+                            sheet.cell(max,1).value = comando[:2]      
                             os.system("dir")
                     else:
                         print("Este comando no se reconoce")
@@ -45,7 +70,9 @@ while True:
                     if(comando[1] in l):
                         res = input("Did you mean ls ? (Y/N)")
                         if(res == 'Y' or res == 'y'):
-                            comandos.append(comando[:2])                    
+                            comandos.append(comando[:2])  
+                            max = max + 1    
+                            sheet.cell(max,1).value = comando[:2]                      
                             os.system("dir")
                     else:
                         print("Este comando no se reconoce")
@@ -55,7 +82,9 @@ while True:
                     if(comando[1] in m):
                         res = input("Did you mean rm ? (Y/N)")
                         if(res == 'Y' or res == 'y'):
-                            comandos.append(comando[:2])                    
+                            comandos.append(comando[:2])  
+                            max = max + 1    
+                            sheet.cell(max,1).value = comando[:2]                      
                             os.system("del"+comando[2::])
                     else:
                         print("Este comando no se reconoce")
@@ -63,7 +92,9 @@ while True:
                     if(comando[1] in r):
                         res = input("Did you mean rm ? (Y/N)")
                         if(res == 'Y' or res == 'y'):
-                            comandos.append(comando[:2])                    
+                            comandos.append(comando[:2]) 
+                            max = max + 1    
+                            sheet.cell(max,1).value = comando[:2]                       
                             os.system("del"+comando[2::])
                     else:
                         print("Este comando no se reconoce")
